@@ -1,0 +1,40 @@
+int led = 9;        // LED en pin PWM
+int buzzer = 8;     // Buzzer
+int pot = A0;       // Potenciómetro
+
+int valor = 0;
+int brillo = 0;
+int frecuencia = 0;
+
+void setup() {
+  pinMode(led, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Leer potenciómetro
+  valor = analogRead(pot);
+
+  // Convertir a brillo (0-255)
+  brillo = map(valor, 0, 1023, 0, 255);
+
+  // Convertir a frecuencia (sonido)
+  frecuencia = map(valor, 0, 1023, 100, 2000);
+
+  // LED con brillo PWM
+  analogWrite(led, brillo);
+
+  // Buzzer con tono variable
+  tone(buzzer, frecuencia);
+
+  // Mostrar en Monitor Serial
+  Serial.print("Pot: ");
+  Serial.print(valor);
+  Serial.print(" | Brillo: ");
+  Serial.print(brillo);
+  Serial.print(" | Frecuencia: ");
+  Serial.println(frecuencia);
+
+  delay(200);
+}
