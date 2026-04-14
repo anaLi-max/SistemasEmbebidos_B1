@@ -1,0 +1,57 @@
+#include <Servo.h>
+
+//  MOTOR DC (L293D)
+const int ENA = 10; // PWM velocidad
+const int IN1 = 8;  // Dirección
+const int IN2 = 9;  // Dirección
+
+//  SERVO
+Servo mi_servo;
+const int PIN_SERVO = 11;
+const int PIN_POT = A0;
+
+int angulo_anterior = -1;
+
+// 🔧 FUNCIONES MOTOR
+void motorAdelante(int velocidad) {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(ENA, velocidad);
+}
+
+void motorAtras(int velocidad) {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  analogWrite(ENA, velocidad);
+}
+
+void motorFreno() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, HIGH);
+  analogWrite(ENA, 255);
+}
+
+void motorLibre() {
+  analogWrite(ENA, 0);
+}
+
+void setup() {
+  // Motor
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+
+  // Servo
+  mi_servo.attach(PIN_SERVO);
+  mi_servo.write(90);
+
+  Serial.begin(9600);
+  Serial.println("Sistema listo");
+}
+
+void loop() {
+
+  //  MOTOR ADELANTE (velocidad creciente)
+  for (int v = 100; v <= 255; v += 20) {
+    motorAdelante(v);
+    moverServo()
